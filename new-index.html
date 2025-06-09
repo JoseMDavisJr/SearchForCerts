@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SearchForCerts - Certification Library</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 900px; margin: auto; padding: 20px; }
+    h1 { text-align: center; }
+    label { margin-right: 10px; }
+    select, input[type="text"] { margin-bottom: 15px; padding: 5px; }
+    .cert-list { margin-top: 20px; }
+    .cert-item { border-bottom: 1px solid #ddd; padding: 10px 0; }
+    .cert-item a { font-weight: bold; text-decoration: none; color: #0066cc; }
+    .cert-item a:hover { text-decoration: underline; }
+    .tags { font-size: 0.9em; color: #555; }
+  </style>
+</head>
+<body>
+  <h1>SearchForCerts</h1>
+  <p>Find certifications by type, category, or keyword.</p>
+
+  <div>
+    <label for="filterType">Type:</label>
+    <select id="filterType">
+      <option value="All">All</option>
+      <option value="Free">Free</option>
+      <option value="Paid">Paid</option>
+      <option value="Lifetime">Lifetime</option>
+      <option value="Annual">Annual</option>
+    </select>
+
+    <label for="filterCategory">Category:</label>
+    <select id="filterCategory">
+      <option value="All">All</option>
+      <option value="Health">Health</option>
+      <option value="Safety">Safety</option>
+      <option value="Technology">Technology</option>
+      <option value="Education">Education</option>
+      <option value="Fun">Fun</option>
+    </select>
+
+    <label for="searchKeyword">Search:</label>
+    <input type="text" id="searchKeyword" placeholder="Keyword..." />
+  </div>
+
+  <div class="cert-list" id="certList">
+    <!-- Certifications will appear here -->
+  </div>
+
+  <script>
+    // Load certifications from JSON file
+    async function loadCerts() {
+      const res = await fetch('certs.json');
+      return await res.json();
+    }
+
+    function displayCerts(certs) {
+      const container = document.getElementById('certList');
+      container.innerHTML = '';
+
+      if (certs.length === 0) {
+        container.innerHTML = '<p>No certifications found.</p>';
+        return;
+      }
+
+      certs.forEach(cert => {
+        const div = document.createElement('div');
+        div.classList.add('cert-item');
+
+        div.innerHTML = `
+          <a href="${cert.link}" target="_blank" rel="noopener noreferrer">${cert.name}</a>
+          <div class="tags">Type: ${cert.type} | Category: ${cert.category} | Validity: ${cert.validity || 'N/A'}</div>
+          <p>${cert.description}</p>
+        `;
+
+        container.appendChild(div);
+      });
+    }
+
+    async function filterAndDisplay() {
+      const certs = await loadCerts();
+
+      const filterType = document.getElementById('filterType').value;
+      const filterCategory = document.getElementById('filterCategory').value;
+      const searchKeyword = document.getElementById('searchKeyword').value.toLowerCase();
+
+      let filtered = certs;
+
+      if (filterType !== 'All') {
+        filtered = filtered.filter(c => c.type === filterType);
+      }
+      if (filterCategory !== 'All') {
+        filtered = filtered.filter(c => c.category === filterCategory);
+      }
+      if (searchKeyword) {
+        filtered = filtered.filter(c => c.name.toLowerCase().includes(searchKeyword) || (c.description && c.description.toLowerCase().includes(searchKeyword)));
+      }
+
+      displayCerts(filtered);
+    }
+
+    document.getElementById('filterType').addEventListener('change', filterAndDisplay);
+    document.getElementById('filterCategory').addEventListener('change', filterAndDisplay);
+    document.getElementById('searchKeyword').addEventListener('input', filterAndDisplay);
+
+    // Initial load
+    filterAndDisplay();
+  </script>
+</body>
+</html>

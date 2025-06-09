@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Add Certification - SearchForCerts</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; }
+    h1 { text-align: center; }
+    label { display: block; margin-top: 10px; }
+    input, select, textarea { width: 100%; padding: 8px; margin-top: 5px; }
+    textarea { height: 80px; }
+    button { margin-top: 15px; padding: 10px 15px; font-size: 16px; }
+    pre { background: #eee; padding: 10px; white-space: pre-wrap; word-wrap: break-word; }
+  </style>
+</head>
+<body>
+  <h1>Add a Certification</h1>
+  <form id="certForm">
+    <label for="name">Certification Name:</label>
+    <input type="text" id="name" required />
+
+    <label for="link">Link (URL):</label>
+    <input type="url" id="link" required />
+
+    <label for="type">Type:</label>
+    <select id="type" required>
+      <option value="">Select type</option>
+      <option value="Free">Free</option>
+      <option value="Paid">Paid</option>
+      <option value="Lifetime">Lifetime</option>
+      <option value="Annual">Annual</option>
+    </select>
+
+    <label for="category">Category:</label>
+    <select id="category" required>
+      <option value="">Select category</option>
+      <option value="Health">Health</option>
+      <option value="Safety">Safety</option>
+      <option value="Technology">Technology</option>
+      <option value="Education">Education</option>
+      <option value="Fun">Fun</option>
+    </select>
+
+    <label for="validity">Validity Period (optional):</label>
+    <input type="text" id="validity" placeholder="e.g. Lifetime, 1 year, etc." />
+
+    <label for="description">Short Description:</label>
+    <textarea id="description"></textarea>
+
+    <button type="submit">Generate JSON Entry</button>
+  </form>
+
+  <h2>Copy this JSON and add it to <code>certs.json</code>:</h2>
+  <pre id="output"></pre>
+
+  <script>
+    document.getElementById('certForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const cert = {
+        name: document.getElementById('name').value.trim(),
+        link: document.getElementById('link').value.trim(),
+        type: document.getElementById('type').value,
+        category: document.getElementById('category').value,
+        validity: document.getElementById('validity').value.trim(),
+        description: document.getElementById('description').value.trim()
+      };
+
+      // Remove empty fields for cleanliness
+      Object.keys(cert).forEach(key => {
+        if (!cert[key]) delete cert[key];
+      });
+
+      const jsonString = JSON.stringify(cert, null, 2);
+      document.getElementById('output').textContent = jsonString;
+    });
+  </script>
+</body>
+</html>

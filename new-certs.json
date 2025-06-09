@@ -1,0 +1,26 @@
+[
+  {
+    "name": "CPR Certification",
+    "link": "https://www.redcross.org/take-a-class/cpr",
+    "type": "Paid",
+    "category": "Health",
+    "validity": "2 years",
+    "description": "Learn CPR techniques and get certified by the Red Cross."
+  },
+  {
+    "name": "First Aid Certification",
+    "link": "https://www.americanheart.org/cpr-first-aid",
+    "type": "Paid",
+    "category": "Health",
+    "validity": "2 years",
+    "description": "Basic first aid skills course and certification."
+  },
+  {
+    "name": "Google IT Support Professional Certificate",
+    "link": "https://www.coursera.org/professional-certificates/google-it-support",
+    "type": "Paid",
+    "category": "Technology",
+    "validity": "Lifetime",
+    "description": "Earn IT support skills with Google on Coursera."
+  }
+]
